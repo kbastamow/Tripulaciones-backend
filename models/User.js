@@ -3,6 +3,17 @@ const ObjectId = mongoose.SchemaTypes.ObjectId;
 
 const UserSchema = new mongoose.Schema(
     {
+        name: {
+            type: String,
+            required: true
+
+        },
+
+        surname: {
+            type: String,
+            required: true
+        },
+        
         email: {
             type: String,
             match: [/.+\@.+\..+/, "Formato de correo no válido"],
@@ -13,16 +24,6 @@ const UserSchema = new mongoose.Schema(
         password: {
             type: String,
             required: [true, "Introduce la contraseña"]
-        },
-
-        name: {
-            type: String,
-            required: true
-
-        },
-        surname: {
-            type: String,
-            required: true
         },
 
         role: {
