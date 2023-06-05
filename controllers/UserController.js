@@ -1,3 +1,5 @@
+const fs = require("fs"); //manejar imagenes
+const path = require("path"); //manejar imagenes
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -17,7 +19,6 @@ const UserController = {
     try {
       const user = await User.create({
         ...req.body,
-        //imagen: req.file.filename,
         password: hashedPassword,
         confirmed: false,
         role: "user",
@@ -85,6 +86,36 @@ const UserController = {
       console.error(error);
     }
   },
+
+  async updateProfile(req, res) {
+    try {
+      let data = {...req.body}
+      if (req.file) {
+        data = { ...data, image: req.file.filename };
+        if (req.user.image) {
+          const imagePath = path.join(__dirname, "../public/images/user/", req.user.image);
+          if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath); //Node.js method that deletes the corresponding file
+          }
+        }
+      } else {
+        delete data.image;
+      }
+      const user = await User.findByIdAndUpdate(req.user._id, data, { new: true });
+      res.status(200).send({ msg: "Perfil actualizado", user });
+    } catch (error) {
+      res.status(500).send("Ha habido un problema actualiando el perfil")
+      
+    }
+  },
+
+  
+
+
+
+
+
+
 };
 
 module.exports = UserController;

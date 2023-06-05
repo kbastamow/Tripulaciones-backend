@@ -27,10 +27,10 @@ const UserSchema = new mongoose.Schema(
             required: [true, "Introduce la contraseña"]
         },
 
-        age: {
-            type: Number,
-            required: [true, "Por favor rellena tu edad"],
-        },
+        // age: {
+        //     type: Number,
+        //     required: [true, "Por favor rellena tu edad"],
+        // },
 
         role: {
             type: String,
@@ -58,6 +58,16 @@ const UserSchema = new mongoose.Schema(
             ref: "User",
             accepted: Boolean
         }],
+    //categoryIds son los intereses!
+        categoryIds: [{
+            type: ObjectId,
+            ref: "Category"
+        }],
+    //eventIds son eventos donde estás apuntado
+        eventIds: [{
+            type: ObjectId,
+            ref: "Event"
+        }],
         confirmed: {
             type: Boolean
         },
@@ -65,6 +75,7 @@ const UserSchema = new mongoose.Schema(
         tokens: []
 
 }, {timestamps: true})
+
 
 const User = mongoose.model("User", UserSchema);
 
