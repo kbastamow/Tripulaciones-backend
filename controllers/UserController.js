@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const transporter = require("../config/nodemailer");
 require("dotenv").config();
 
 const UserController = {
@@ -18,7 +19,17 @@ const UserController = {
         ...req.body,
         //imagen: req.file.filename,
         password: hashedPassword,
+        confirmed: false,
+        role: "user",
       });
+      await transporter.sendMail({
+        to: req.body.email,
+        subject: "Confirme su registro",
+        html: `<h3>Bienvenido, estás a un paso de registrarte </h3>
+        <a href="#"> Click para confirmar tu registro</a>
+        `,
+      });
+
       res.status(201).send({ message: "Usuario creado con éxito", user });
     } catch (error) {
       console.error(error);
@@ -55,6 +66,17 @@ const UserController = {
       res
         .status(500)
         .send({ message: "Ha habido un problema al loguearte", error });
+    }
+  },
+
+  async confirm(req, res) {
+    try {
+      await User.updateOne({email: req.params.email },{ confirmed: true});
+      const user = await User.findOne({email: req.params.email}) 
+
+      res.status(201).send({msg:"Usuario confirmado con éxito", user});
+    } catch (error) {
+      console.error(error);
     }
   },
 };
