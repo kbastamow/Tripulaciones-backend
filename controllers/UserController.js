@@ -122,7 +122,6 @@ const UserController = {
     } catch (error) {
       console.error(error),
       res.send("Problema en añadir intereses")
-      
     }
   }
 
