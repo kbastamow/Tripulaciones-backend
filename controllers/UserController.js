@@ -85,10 +85,11 @@ const UserController = {
       console.error(error);
     }
   },
-
+//Aquí sin intereses (categorías), hay otro endpoint para ello
   async updateProfile(req, res) {
     try {
       let data = {...req.body}
+      console.log(data)
       if (req.file) {
         data = { ...data, image: req.file.filename };
         if (req.user.image) {
@@ -107,6 +108,23 @@ const UserController = {
       
     }
   },
+
+
+  async addInterests(req,res){
+    try {
+      //req.body es un array de ids de categories
+      const user = await User.findByIdAndUpdate(
+        req.user._id,
+        { $push: { categoryIds: { $each: req.body.categoryIds } } }, //$each es como foreach
+        {new: true}
+      )
+      res.status(200).send({msg: "Intereses actualizados", user})   
+    } catch (error) {
+      console.error(error),
+      res.send("Problema en añadir intereses")
+      
+    }
+  }
 
   
 
