@@ -109,7 +109,6 @@ const UserController = {
     }
   },
 
-
   async addInterests(req,res){
     try {
       //req.body es un array de ids de categories
@@ -123,14 +122,33 @@ const UserController = {
       console.error(error),
       res.send("Problema en añadir intereses")
     }
+  },
+
+//  async getById(req, res) {
+//   try {
+//     const user = await User.findById(req.params._id)
+//     res.send(user)
+//   } catch (error) {
+//     res.send(error) 
+//   }
+//  },
+
+ async getById(req, res) {
+  try {
+    const user = await User.findById(req.params._id)
+    .populate({
+      path: "categoryIds",
+      select: "name _id"
+    })
+    .populate({
+      path: "eventIds",
+      select: "title _id"
+    })
+    res.send(user)
+  } catch (error) {
+    res.send(error) 
   }
-
-  
-
-
-
-
-
+ }
 
 };
 

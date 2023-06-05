@@ -10,5 +10,6 @@ router.post("/login", UserController.login);
 router.post("/updateProfile", authentication, uploadUserImage.single("image"), UserController.updateProfile)
 router.post("/addInterests", authentication, UserController.addInterests)
 router.get("/confirm/:email", UserController.confirm);
+router.get("/getById/:_id", UserController.getById);
 module.exports = router;
 
