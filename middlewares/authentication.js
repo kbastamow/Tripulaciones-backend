@@ -1,16 +1,17 @@
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+require("dotenv").config();
+
+
+
+
 const authentication = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
-    const payload = jwt.verify(token, jwt_secret);
-    const user = await User.findByPk(payload.id);
-    const tokenFound = await Token.findOne({
-      where: {
-        [Op.and]: [{ UserId: user.id }, { token: token }],
-      },
-    });
-
-    if (!tokenFound) {
-      return res.status(401).send({ message: "No estas autorizado" });
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findOne({ _id: payload._id, tokens: token });
+    if (!user) {
+      return res.status(401).send("Usuario no existe");
     }
     req.user = user;
     next();
@@ -18,7 +19,7 @@ const authentication = async (req, res, next) => {
     console.log(error);
     res
       .status(500)
-      .send({ error, message: "Ha habido un problema con el token" });
+      .send("Ha habido un problema con el token");
   }
 };
 

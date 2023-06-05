@@ -1,5 +1,6 @@
 const express = require('express');
 const ChatController = require('../controllers/ChatController');
+const {authentication, isAdmin} = require('../middlewares/authentication')
 const router = express.Router()
 
 router.post("./create", ChatController.create)
