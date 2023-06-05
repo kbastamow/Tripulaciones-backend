@@ -4,6 +4,5 @@ const {authentication, isAdmin} = require('../middlewares/authentication')
 const router = express.Router()
 
 
-router.post('/createEvent',EventController.createEvent)
-
+router.post('/createEvent',authentication, EventController.createEvent)
 module.exports = router;

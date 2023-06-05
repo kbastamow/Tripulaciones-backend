@@ -7,7 +7,7 @@ const CategoryController = {
     try {
       const category = await Category.create(req.body);
 
-      res.status(201).send(category);
+      res.status(201).send({message: "Categoría creada",category});
     } catch (error) {
       console.error(error);
 

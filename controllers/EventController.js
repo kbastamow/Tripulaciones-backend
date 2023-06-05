@@ -15,6 +15,7 @@ const EventController = {
       res.status(500).send({ message: "Ha habido un problema al crear el evento" });
     }
   },
+
 };
 
 module.exports = EventController;
