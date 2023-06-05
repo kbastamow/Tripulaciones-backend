@@ -13,6 +13,7 @@ router.get("/getById/:_id", UserController.getById);
 router.get("/searchByName/:name", UserController.searchByName)
 // router.get('/recoverPassword/:email',UserController.recoverPassword)
 router.put("/resetPassword/:recoverToken", UserController.resetPassword)
+router.delete('/logout',authentication, UserController.logout)
 
 module.exports = router;
 
