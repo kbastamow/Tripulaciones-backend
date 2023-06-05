@@ -16,7 +16,8 @@ const UserSchema = new mongoose.Schema(
         
         email: {
             type: String,
-            match: [/.+\@.+\..+/, "Formato de correo no válido"],
+            match: [/.+\@.+\..+/, "Este correo no es válido"],
+            //match: [/.+@edem\.es$/, 'El correo electrónico debe terminar en @edem.es'], (validacion para solo @edem.es)
             unique: true,
             required: [true, "Introduce el correo para el usuario"],
         },
@@ -24,6 +25,11 @@ const UserSchema = new mongoose.Schema(
         password: {
             type: String,
             required: [true, "Introduce la contraseña"]
+        },
+
+        age: {
+            type: Number,
+            required: [true, "Por favor rellena tu edad"],
         },
 
         role: {

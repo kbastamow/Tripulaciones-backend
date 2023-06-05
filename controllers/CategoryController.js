@@ -4,7 +4,7 @@ const CategoryController = {
   async create(req, res) {
     try {
       const category = await Category.create(req.body);
-
+      
       res
         .status(201)
         .send({ message: "Category created successfully", category });
@@ -28,7 +28,7 @@ const CategoryController = {
         .send({ message: "Has a problem to show categories" });
     }
   }
-  
+
 };
 
 module.exports = CategoryController;
