@@ -148,7 +148,22 @@ const UserController = {
   } catch (error) {
     res.send(error) 
   }
- }
+ },
+
+ async searchByName(req, res) {
+  try {
+    if (req.params.name.length > 20){
+      return res.status(400).send('Búsqueda demasiado larga')
+    }
+      const name = new RegExp(req.params.name, "i"); //This from JS
+      const users = await User.find({name});
+      if (users.length < 1) return res.status(404).send("No hay resultados")
+      res.send(users);
+    } catch (error) {
+      console.error(error)
+      res.send(error)
+    }
+  },
 
 };
 

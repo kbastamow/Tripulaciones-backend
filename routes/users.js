@@ -11,5 +11,6 @@ router.post("/updateProfile", authentication, uploadUserImage.single("image"), U
 router.post("/addInterests", authentication, UserController.addInterests)
 router.get("/confirm/:email", UserController.confirm);
 router.get("/getById/:_id", UserController.getById);
+router.get("/searchByName/:name", UserController.searchByName)
 module.exports = router;
 
