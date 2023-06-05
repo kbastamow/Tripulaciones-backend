@@ -5,7 +5,8 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.json());
-
+app.use("/events", require("./routes/events"));
+app.use("/categories", require("./routes/categories"))
 dbConnection();
 
 
