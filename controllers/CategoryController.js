@@ -3,7 +3,7 @@ const Event = require("../models/Event");
 
 const CategoryController = {
   
-    async create(req, res) {
+    async createCategory(req, res) {
     try {
       const category = await Category.create(req.body);
 
@@ -26,7 +26,22 @@ const CategoryController = {
       console.error(error);
       res.status(500).send({ message: "Ha habido un problema al obtener los eventos" });
     }
+  },
+
+  async getAll(req, res) {
+    try {
+      const categories = await Category.find();
+
+      res.send({ message: "Categories showed successfully", categories });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .send({ message: "Has a problem to show categories" });
+    }
   }
+
+
 };
 
 module.exports = CategoryController;
