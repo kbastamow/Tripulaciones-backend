@@ -1,13 +1,16 @@
+const User = require('../models/User');
 const Chat = require("../models/chat");
+
 
 const ChatController = {
   async create(req, res) {
     try {
+      const chat = await Chat.create(req.body); // Crear el objeto chat antes del bucle
+
       req.body.users.forEach(async (userId) => {
         await User.findByIdAndUpdate(userId, { $push: { chat: chat._id } });
       });
 
-      const chat = await Chat.create(req.body);
       res.status(201).json({ message: "Chat creado", chat });
     } catch (error) {
       console.error(error);
@@ -42,33 +45,34 @@ const ChatController = {
   async deleteMsg(req, res) {
     try {
       const { chatId, messageId } = req.params;
-
+  
       // Buscar el chat por su ID
       const chat = await Chat.findById(chatId);
-
+  
       // Validar si el chat existe
       if (!chat) {
         return res.status(404).json({ error: "Chat no encontrado" });
       }
-
+  
       // Buscar el mensaje dentro del chat por su ID
       const message = chat.messages.id(messageId);
-
+  
       // Validar si el mensaje existe
       if (!message) {
         return res.status(404).json({ error: "Mensaje no encontrado" });
       }
-
+  
       // Eliminar el mensaje del chat
-      message.remove();
+      chat.messages.pull(messageId);
       await chat.save();
-
+  
       res.json({ message: "Mensaje eliminado", chat });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Error interno del servidor" });
     }
   },
+  
 
   async deleteChat(req, res) {
     try {

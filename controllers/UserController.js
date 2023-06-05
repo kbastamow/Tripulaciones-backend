@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-//const transporter = require("../middlewares/nodemailer"); (nodemailer)
+// const transporter = require("../middlewares/nodemailer") //Nodemailer
 require("dotenv").config();
 
 const UserController = {
@@ -85,10 +85,11 @@ const UserController = {
       console.error(error);
     }
   },
-
+//Aquí sin intereses (categorías), hay otro endpoint para ello
   async updateProfile(req, res) {
     try {
       let data = {...req.body}
+      console.log(data)
       if (req.file) {
         data = { ...data, image: req.file.filename };
         if (req.user.image) {
@@ -108,12 +109,101 @@ const UserController = {
     }
   },
 
-  
+  async addInterests(req,res){
+    try {
+      //req.body es un array de ids de categories
+      const user = await User.findByIdAndUpdate(
+        req.user._id,
+        { $push: { categoryIds: { $each: req.body.categoryIds } } }, //$each es como foreach
+        {new: true}
+      )
+      res.status(200).send({msg: "Intereses actualizados", user})   
+    } catch (error) {
+      console.error(error),
+      res.send("Problema en añadir intereses")
+    }
+  },
 
+//  async getById(req, res) {
+//   try {
+//     const user = await User.findById(req.params._id)
+//     res.send(user)
+//   } catch (error) {
+//     res.send(error) 
+//   }
+//  },
 
+ async getById(req, res) {
+  try {
+    const user = await User.findById(req.params._id)
+    .populate({
+      path: "categoryIds",
+      select: "name _id"
+    })
+    .populate({
+      path: "eventIds",
+      select: "title _id"
+    })
+    res.send(user)
+  } catch (error) {
+    res.send(error) 
+  }
+ },
 
+ async searchByName(req, res) {
+  try {
+    if (req.params.name.length > 20){
+      return res.status(400).send('Búsqueda demasiado larga')
+    }
+      const name = new RegExp(req.params.name, "i"); //This from JS
+      const users = await User.find({name});
+      if (users.length < 1) return res.status(404).send("No hay resultados")
+      res.send(users);
+    } catch (error) {
+      console.error(error)
+      res.send(error)
+    }
+  },
 
+  /*  //CAMBIAR EL URL CUANDO ESTÈ DESPLEGADO!!!!
+  async recoverPassword(req, res) {
+    try {
+      const recoverToken = jwt.sign(
+        { email: req.params.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "12h" }
+      );
+      const url = `http://localhost:${process.env.PORT}/users/resetPassword/${recoverToken}`; 
+      await transporter.sendMail({
+        to: req.params.email,
+        subject: "Recupera tu contraseña",
+        html: `<h3>Recupera la contraseña</h3>
+        <a href='${url}'>Sigue el enlace para resetear tu contraseña</a>
+        <p>El enlace sigue válido durante 12 horas</p>`,
+      });
+      res.send({ message: "Te hemos enviado un correo para recuperar la contraseña" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send(error);
+    }
+  },
+  */
 
+  async resetPassword(req, res) {
+    try {
+      const recoverToken = req.params.recoverToken;
+      const payload = jwt.verify(recoverToken, process.env.JWT_SECRET);
+      const password = await bcrypt.hash(req.body.password, 10);
+      await User.findOneAndUpdate(
+        { email: payload.email },
+        { password: password }
+      );
+      res.send({ msg: "Se ha actualizado tu contraseña" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send(error);
+    }
+  },
 
 };
 
