@@ -5,16 +5,16 @@ const EventSchema = new mongoose.Schema(
     {
         title: {
             type: String,
-            required: true
+            required: [true, 'Por favor ingrese un título']
         },
 
         description: {
             type: String,
-            required: true
+            required: [true, 'Por favor ingrese algo de contenido']
         },
 
-        data: {
-            type: Date,
+        date: {
+            type: String,
             required: true
         },
 
@@ -23,10 +23,10 @@ const EventSchema = new mongoose.Schema(
             required: true
         },
 
-        categoryId: {
+        categoryIds: [{
             type: ObjectId,
             ref: 'Category'
-          },
+          }],
 
     }, { timestamps: true });
 
