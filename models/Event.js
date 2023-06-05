@@ -14,19 +14,17 @@ const EventSchema = new mongoose.Schema(
         },
 
         date: {
-            type: String,
+            type: Date,
             required: true
         },
 
         image: {
             type: String,
-            required: true
         },
 
-        categoryIds: [{
-            type: ObjectId,
-            ref: 'Category'
-          }],
+        categoryIds: [ 
+            {type: ObjectId, ref: 'Category'}
+        ],
 
     }, { timestamps: true });
 
