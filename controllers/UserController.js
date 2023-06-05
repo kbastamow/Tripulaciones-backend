@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-//const transporter = require("../middlewares/nodemailer"); (nodemailer)
+// const transporter = require("../middlewares/nodemailer") //Nodemailer
 require("dotenv").config();
 
 const UserController = {
@@ -162,6 +162,46 @@ const UserController = {
     } catch (error) {
       console.error(error)
       res.send(error)
+    }
+  },
+
+  /*  //CAMBIAR EL URL CUANDO ESTÈ DESPLEGADO!!!!
+  async recoverPassword(req, res) {
+    try {
+      const recoverToken = jwt.sign(
+        { email: req.params.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "12h" }
+      );
+      const url = `http://localhost:${process.env.PORT}/users/resetPassword/${recoverToken}`; 
+      await transporter.sendMail({
+        to: req.params.email,
+        subject: "Recupera tu contraseña",
+        html: `<h3>Recupera la contraseña</h3>
+        <a href='${url}'>Sigue el enlace para resetear tu contraseña</a>
+        <p>El enlace sigue válido durante 12 horas</p>`,
+      });
+      res.send({ message: "Te hemos enviado un correo para recuperar la contraseña" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send(error);
+    }
+  },
+  */
+
+  async resetPassword(req, res) {
+    try {
+      const recoverToken = req.params.recoverToken;
+      const payload = jwt.verify(recoverToken, process.env.JWT_SECRET);
+      const password = await bcrypt.hash(req.body.password, 10);
+      await User.findOneAndUpdate(
+        { email: payload.email },
+        { password: password }
+      );
+      res.send({ msg: "Se ha actualizado tu contraseña" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send(error);
     }
   },
 
