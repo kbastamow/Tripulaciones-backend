@@ -7,7 +7,8 @@ const { handleTypeError }= require('./middlewares/errors');
 const app = express();
 
 app.use(express.json());
-app.use(express.static("./public"));
+app.use("/events", require("./routes/events"));
+app.use("/categories", require("./routes/categories"))app.use(express.static("./public"));
 
 app.use('/categories',require('./routes/categories'));
 app.use('/users',require('./routes/users'))
