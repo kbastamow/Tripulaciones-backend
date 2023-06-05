@@ -51,7 +51,6 @@ const UserController = {
     //       .status(401)
     //       .send({ msg: "Confirma el usuario a través del correo" });
     //   }
-      console.log(user);
       
       const isMatch = await bcrypt.compare(req.body.password, user.password);
       if (!isMatch) {
