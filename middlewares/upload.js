@@ -12,8 +12,7 @@ const generateMulterUpload = (fullPath) => Multer({
         else cb(null, false)
       
     },
-    limits: { filesize: "2000000" }
-    
+    limits: { filesize: "2000000" }   
 });
 
 const uploadEventImage = generateMulterUpload('./public/images/event');
