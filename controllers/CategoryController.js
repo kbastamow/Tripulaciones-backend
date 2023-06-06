@@ -39,8 +39,18 @@ const CategoryController = {
         .status(500)
         .send({ message: "Has a problem to show categories" });
     }
-  }
+  },
 
+  async update(req, res) {
+    try {
+      const category = await Category.findByIdAndUpdate(req.params._id, req.body, { new: true })
+      res.send({ message: "category successfully updated", category });
+    } catch (error) {
+      console.error(error);
+  
+    }
+    
+  },
 
 };
 
