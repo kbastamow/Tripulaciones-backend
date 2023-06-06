@@ -7,8 +7,9 @@ const CategoryController = require('../controllers/CategoryController');
 //isAdmin no está implementado para facilitar desarrollo
 router.post('/create',authentication,CategoryController.createCategory)
 router.get('/getAll', CategoryController.getAll)
+router.get('/name/:name',CategoryController.getCategoriesByName)
 router.put('/update/:_id', authentication,CategoryController.update)//falta isAdmin
-
+router.delete('/delete/:_id', authentication,CategoryController.delete)//falta isAdmin
 
 module.exports = router;
 
