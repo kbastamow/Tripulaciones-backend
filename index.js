@@ -13,7 +13,7 @@ app.use("/events", require("./routes/events"));
 app.use('/categories',require('./routes/categories'));
 app.use('/users',require('./routes/users'))
 app.use('/chats',require('./routes/chats'))
-
+app.use("/lanzadera", require("./routes/lanzadera"))
 
 app.use(handleTypeError)
 
