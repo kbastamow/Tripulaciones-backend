@@ -38,14 +38,15 @@ const UserSchema = new mongoose.Schema(
         },
 
         roleMde: {
-            type: String
+            type: String,
+            default: "student"
         },
         
         program: {
             type: String,
         },
-        year: {
-            type: Number,
+        year: {   //BOOTCAMP & MASTER: "1"
+            type: String,
         },
 
         image: {
