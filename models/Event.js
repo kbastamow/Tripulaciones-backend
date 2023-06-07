@@ -22,6 +22,11 @@ const EventSchema = new mongoose.Schema(
             type: String,
         },
 
+        url: {
+            type:String,
+            default: "https://edem.eu"
+        },
+
         categoryIds: [ 
             {type: ObjectId, ref: 'Category'}
         ],

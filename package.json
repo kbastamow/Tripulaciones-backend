@@ -9,7 +9,8 @@
     "seedLanzadera": "node ./seeders/seedLanzadera.js",
     "seedPrograms": "node ./seeders/seedPrograms.js",
     "seedCategories": "node ./seeders/seedCategories.js",
-    "seedUsers": "node ./seeders/seedUsers.js"
+    "seedUsers": "node ./seeders/seedUsers.js",
+    "seedEvents": "node ./seeders/seedEvents.js"
   },
   "keywords": [],
   "author": "",

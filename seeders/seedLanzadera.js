@@ -25,6 +25,20 @@ const connectToDatabase = async() => {
     }
 }
 
+const seedLanzadera = async() => {
+ try {
+   const res = await axios.get("http://13.48.25.210/get_scrap_startups")
+   const users = res.data
+   console.log(users[0])
+  //  console.log(res.data.slice(0,5))
+  //  const seed = await Lanzadera.insertMany(data)
+
+ } catch (error) {
+  console.error(error)
+  
+ }
+}
+
 
 
 //   const processData = async (data) => {
@@ -76,6 +90,6 @@ const connectToDatabase = async() => {
 //  }
 
 
- connectToDatabase();
-seedStartups()
+// connectToDatabase();
+// seedLanzadera()
 
