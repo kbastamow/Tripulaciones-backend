@@ -41,7 +41,7 @@ const UserSchema = new mongoose.Schema(
             type: String
         },
         
-        course: {
+        program: {
             type: String,
         },
         year: {
@@ -77,6 +77,18 @@ const UserSchema = new mongoose.Schema(
 
 }, {timestamps: true})
 
+UserSchema.index({   //buscador por nombre o correo
+    name: "text",
+    surname: "text",
+  });
+
+
+UserSchema.methods.toJSON = function() {
+    const user = this._doc;
+    delete user.tokens;
+    delete user.password;
+    return user;
+}
 
 const User = mongoose.model("User", UserSchema);
 

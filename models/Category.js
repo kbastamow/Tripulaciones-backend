@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.SchemaTypes.ObjectId;
 
-const categorySchema = new mongoose.Schema({
+const CategorySchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Por favor ingrese una categoria'],
@@ -15,7 +15,11 @@ const categorySchema = new mongoose.Schema({
   ]
 }, { timestamps: true });
 
-const Category = mongoose.model('Category', categorySchema);
+CategorySchema.index({
+  name: "text",
+});
+
+const Category = mongoose.model('Category', CategorySchema);
 
 module.exports = Category;
 
