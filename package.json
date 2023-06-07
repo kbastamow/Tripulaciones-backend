@@ -6,7 +6,10 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "seed": "node ./seeders/seedLanzadera.js"
+    "seedLanzadera": "node ./seeders/seedLanzadera.js",
+    "seedPrograms": "node ./seeders/seedPrograms.js",
+    "seedCategories": "node ./seeders/seedCategories.js",
+    "seedUsers": "node ./seeders/seedUsers.js"
   },
   "keywords": [],
   "author": "",

@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const {dbConnection} = require ("../config/config");
 
 /*Establish connection: check package.json: "seed": "node ./seeders/seedLanzadera.js"
-  npm run seed
+  npm run NAME
 */
 
 let isConnected = false;

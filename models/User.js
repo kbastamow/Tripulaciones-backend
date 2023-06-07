@@ -27,10 +27,15 @@ const UserSchema = new mongoose.Schema(
             required: [true, "Introduce la contraseña"]
         },
 
-        // age: {
-        //     type: Number,
-        //     required: [true, "Por favor rellena tu edad"],
-        // },
+        age: {
+            type: String,
+
+        },
+
+        gender: {
+            type: String,
+            required: [true, "Por favor rellena el género"],
+        },
 
         role: {
             type: String,
@@ -43,7 +48,8 @@ const UserSchema = new mongoose.Schema(
         },
         
         program: {
-            type: String,
+            type: ObjectId,
+            ref: "Program"
         },
         year: {   //BOOTCAMP & MASTER: "1"
             type: String,

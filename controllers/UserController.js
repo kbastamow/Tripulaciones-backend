@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { getAll } = require("./ProgramController");
 // const transporter = require("../middlewares/nodemailer") //Nodemailer
 require("dotenv").config();
 
@@ -127,14 +128,14 @@ const UserController = {
     }
   },
 
-  //  async getById(req, res) {
-  //   try {
-  //     const user = await User.findById(req.params._id)
-  //     res.send(user)
-  //   } catch (error) {
-  //     res.send(error)
-  //   }
-  //  },
+  async getAll(req, res) {
+    try {
+      const users = await User.find()
+      res.status(200).send(users)
+    } catch (error) {
+     console.log(error)
+    }
+   },
 
   async getById(req, res) {
     try {
