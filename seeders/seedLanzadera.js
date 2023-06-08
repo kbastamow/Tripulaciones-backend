@@ -28,66 +28,47 @@ const connectToDatabase = async() => {
 const seedLanzadera = async() => {
  try {
    const res = await axios.get("http://13.48.25.210/get_scrap_startups")
-   const users = res.data
-   console.log(users[0])
-  //  console.log(res.data.slice(0,5))
-  //  const seed = await Lanzadera.insertMany(data)
+   const startups = res.data
+   console.log("length:", res.data.name)
 
- } catch (error) {
-  console.error(error)
+    const names = Object.values(startups.name);
+    const phases = Object.values(startups.phase);
+    const descriptions = Object.values(startups.description);
+    const topicArrays = Object.values(startups.topics);
+    const urls = Object.values(startups.url);
+    const logos = Object.values(startups.logo_link);
+
+   for (let i = 0; i < names.length; i++) {
+    const name = names[i];
+    const phase = phases[i];
+    const description = descriptions[i]
+    const topics = topicArrays[i];
+    const url = urls[i];
+    const logo = logos[i];
   
- }
+    // Create a new instance of the Lanzadera model with the column data
+    const newLanzadera = new Lanzadera({
+      name: name,
+      phase: phase,
+      description: description,
+      topics: topics,
+      url:url,
+      logo: logo,
+    });
+
+    console.log(newLanzadera)
+  // Save the newLanzadera instance to the database
+    await newLanzadera.save();
+  }
+
+  console.log("Data inserted successfully!");
+} catch (error) {
+  console.error(error);
 }
+};
 
 
 
-//   const processData = async (data) => {
-//     try {
-//       const result = await create.Lanzadera.insertMany(data);
-//       console.log("Documents created:");
-//     } catch (error) {
-//       console.error("Error creating documents:", error);
-//     }
-//   };
-
-// const seedStartups = () => {
-//   console.log("File path:", __dirname + "/path/to/startups_by_rows.json");
-//   fs.readFile("./seeders/startups_by_rows.json", "utf8", (err, data) => {
-//   if (err) {
-//     console.error("Error reading file:", err);
-//     return;
-//   }
-//   try {
-//     const jsonData = JSON.parse(data);
-//     const processedData = jsonData.slice[0,2].map((item) => {  //DECIDE HERE WHAT TO INCLUDe
-//       const { logo_link, ...rest } = item;
-//       return { logo: logo_link, ...rest };
-//     });
-//     console.log(processedData)
-//     // processData(processedData);   //DECIDE HERE WHAT TO INCLUDe
-//   } catch (error) {
-//     console.error("Error parsing JSON data:", error);
-//   }
-// })
-// };
-
-
-
-
-
-//  const getStartups = async() => {
-//     try {
-//         const res = await axios.get() //Url to base de datos de data
-//         console.log(res.data)
-//         // const startups = await create.Lanzadera()    res.data? What format?
-//         // to be continued
-          
-    
-//     } catch (error) {
-        
-//     } 
-
-//  }
 
 
 // connectToDatabase();

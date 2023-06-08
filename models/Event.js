@@ -31,6 +31,11 @@ const EventSchema = new mongoose.Schema(
             {type: ObjectId, ref: 'Category'}
         ],
 
+        userIds: [{
+            type: ObjectId,
+            ref: "User"
+        }]
+
     }, { timestamps: true });
 
 const Event = mongoose.model('Event', EventSchema);
