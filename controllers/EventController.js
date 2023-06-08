@@ -50,10 +50,10 @@ const EventController = {
     try {
       const { page = 1, limit = 10 } = req.query;
 
-      const event = await Event.find()
-        .limit(limit)
-        .skip((page - 1) * limit);
-       res.status(201).send({message:'Mostrando todos los eventos',event});
+      const events = await Event.find()
+        // .limit(limit)
+        // .skip((page - 1) * limit);
+       res.status(201).send(events);
     } catch (error) {
       console.error(error);
       res.status(500).send({

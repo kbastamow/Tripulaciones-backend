@@ -9,6 +9,7 @@ router.post("/login", UserController.login);
 router.put("/updateProfile", authentication, uploadUserImage.single("image"), UserController.updateProfile)
 router.put("/addInterests", authentication, UserController.addInterests)
 router.get("/confirm/:email", UserController.confirm);
+router.get("/getAll", UserController.getAll)
 router.get("/getById/:_id", UserController.getById);
 router.get("/searchByName/:name", UserController.searchByName)
 // router.get('/recoverPassword/:email',UserController.recoverPassword)

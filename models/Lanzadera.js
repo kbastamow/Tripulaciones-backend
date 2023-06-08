@@ -8,19 +8,23 @@ const lanzaderaSchema = new mongoose.Schema({
     unique: true
   },
 
+  phase: {
+    type: String,
+  },
+
   description: {
     type: String,  
   },
 
-  website: {  
+  url: {  
     type: String
   },
 
-  sector: [{  //Hay que ver si lo juntamos con categorías o queda separado
+  topics: [{  //Hay que ver si lo juntamos con categorías o queda separado
     type: String
   }],
 
-  image: {
+  logo: {
     type: String,
   }}, { timestamps: true });
 
