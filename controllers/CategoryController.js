@@ -31,12 +31,13 @@ const CategoryController = {
 
   async getAll(req, res) {
     try {
-      const categories = await Category.find();
+      const categories = await Category.find()
+      .select("_id name")
 
-      res.send({ message: "Categories showed successfully", categories });
+      res.send(categories);
     } catch (error) {
       console.error(error);
-      res.status(500).send({ message: "Has a problem to show categories" });
+      res.status(500).send({ message: "Ha habido un problem en mostrar categorías" });
     }
   },
 

@@ -5,13 +5,15 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { getAll } = require("./ProgramController");
-// const transporter = require("../middlewares/nodemailer") //Nodemailer
+const Program = require("../models/Program");
+const transporter = require("../config/nodemailer") 
 require("dotenv").config();
+
 
 const UserController = {
   //Register
   async register(req, res, next) {
-    req.body.role = "user";
+ 
     const password = req.body.password;
     let hashedPassword;
     if (password) {
@@ -24,13 +26,20 @@ const UserController = {
         confirmed: false,
         role: "user",
       });
-      //   await transporter.sendMail({ (nodemailer)
-      //     to: req.body.email,
-      //     subject: "Confirme su registro",
-      //     html: `<h3>Bienvenido, estás a un paso de registrarte </h3>
-      //     <a href="#"> Click para confirmar tu registro</a>
-      //     `,
-      //   });
+      const emailToken = jwt.sign(
+        { email: req.body.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '48h' }
+      );
+      const url = `http://localhost:${process.env.PORT}/users/confirm/${emailToken}`;
+      console.log(user)
+        await transporter.sendMail({ 
+          to: req.body.email,
+          subject: "Confirme su registro",
+          html: `<h3>Bienvenido, estás a un paso de registrarte </h3>
+          <a href='${url}'> Click para confirmar tu registro</a>
+          `,
+        });
 
       res.status(201).send({ message: "Usuario creado con éxito", user });
     } catch (error) {
@@ -45,14 +54,14 @@ const UserController = {
     console.log(req.body);
     try {
       const user = await User.findOne({ email: req.body.email });
-      //   if (!user) {
-      //     return res.status(401).send({ msg: "Usuario o contraseña incorrecto" });
-      //   }
-      //   if (!user.confirmed) { (nodemailer)
-      //     return res
-      //       .status(401)
-      //       .send({ msg: "Confirma el usuario a través del correo" });
-      //   }
+        if (!user) {
+          return res.status(401).send({ msg: "Usuario o contraseña incorrecto" });
+        }
+        if (!user.confirmed) { 
+          return res
+            .status(401)
+            .send({ msg: "Confirma el usuario a través del correo" });
+        }
 
       const isMatch = await bcrypt.compare(req.body.password, user.password);
       if (!isMatch) {
@@ -105,6 +114,7 @@ const UserController = {
       } else {
         delete data.image;
       }
+
       const user = await User.findByIdAndUpdate(req.user._id, data, {
         new: true,
       });
@@ -169,7 +179,7 @@ const UserController = {
     }
   },
 
-  /*  //CAMBIAR EL URL CUANDO ESTÈ DESPLEGADO!!!!
+   //CAMBIAR EL URL CUANDO ESTÈ DESPLEGADO!!!!
   async recoverPassword(req, res) {
     try {
       const recoverToken = jwt.sign(
@@ -191,8 +201,7 @@ const UserController = {
       res.status(500).send(error);
     }
   },
-  */
-
+  
   async resetPassword(req, res) {
     try {
       const recoverToken = req.params.recoverToken;

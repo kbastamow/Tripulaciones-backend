@@ -8,5 +8,6 @@ router.post('/createEvent',authentication, EventController.createEvent)
 router.put('/updateEvent/:_id', EventController.updateEvent)
 router.delete('/deleteEvent/:_id', EventController.deleteEvent)
 router.get('/getAll',EventController.getAllEvents)
+router.get('/getById/:_id',EventController.getById)
 
 module.exports = router;

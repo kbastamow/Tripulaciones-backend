@@ -1,5 +1,6 @@
 const Event = require("../models/Event");
 const Category = require("../models/Category");
+const { findById } = require("../models/User");
 
 const EventController = {
   async createEvent(req, res) {
@@ -50,10 +51,11 @@ const EventController = {
     try {
       const { page = 1, limit = 10 } = req.query;
 
-      const event = await Event.find()
-        .limit(limit)
-        .skip((page - 1) * limit);
-       res.status(201).send({message:'Mostrando todos los eventos',event});
+      const events = await Event.find()
+      .populate({path:"categoryIds", select: "name"})
+        // .limit(limit)
+        // .skip((page - 1) * limit);
+       res.status(201).send(events);
     } catch (error) {
       console.error(error);
       res.status(500).send({
@@ -61,7 +63,22 @@ const EventController = {
       });
     }
   },
+  
+  async getById(req, res) {
+    try {
+      const event = findById(req.params._id)
+      .populate("categoryIds")
+      .populate("userIds")
+      console.log(event)
+      res.status(200).send(event)
+      
+    } catch (error) {
+      console.error(error)
+      res.status(500).send({msg: "Error en mostrar el evento"})
+      
+    }
 
+  }
 
 };
 

@@ -12,7 +12,7 @@ const LanzaderaController = {
         } catch (error) {
             console.error(error)
             res.send("Error del servidor")
-            
+  
         }
     },
 
