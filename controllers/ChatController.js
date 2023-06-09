@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const Chat = require("../models/chat");
+const Chat = require("../models/Chat");
 
 
 const ChatController = {
