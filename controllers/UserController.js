@@ -6,13 +6,14 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { getAll } = require("./ProgramController");
 const Program = require("../models/Program");
-// const transporter = require("../middlewares/nodemailer") //Nodemailer
+const transporter = require("../config/nodemailer") //Nodemailer
 require("dotenv").config();
+
 
 const UserController = {
   //Register
   async register(req, res, next) {
-    req.body.role = "user";
+ 
     const password = req.body.password;
     let hashedPassword;
     if (password) {
@@ -25,11 +26,18 @@ const UserController = {
         confirmed: false,
         role: "user",
       });
-      //   await transporter.sendMail({ (nodemailer)
+      // const emailToken = jwt.sign(
+      //   { email: req.body.email },
+      //   process.env.JWT_SECRET,
+      //   { expiresIn: '48h' }
+      // );
+      // const url = `http://localhost:${process.env.PORT}/users/confirm/${emailToken}`;
+      // console.log(user)
+      //   await transporter.sendMail({ 
       //     to: req.body.email,
       //     subject: "Confirme su registro",
       //     html: `<h3>Bienvenido, estás a un paso de registrarte </h3>
-      //     <a href="#"> Click para confirmar tu registro</a>
+      //     <a href='${url}'> Click para confirmar tu registro</a>
       //     `,
       //   });
 
@@ -46,14 +54,14 @@ const UserController = {
     console.log(req.body);
     try {
       const user = await User.findOne({ email: req.body.email });
-      //   if (!user) {
-      //     return res.status(401).send({ msg: "Usuario o contraseña incorrecto" });
-      //   }
-      //   if (!user.confirmed) { (nodemailer)
-      //     return res
-      //       .status(401)
-      //       .send({ msg: "Confirma el usuario a través del correo" });
-      //   }
+        if (!user) {
+          return res.status(401).send({ msg: "Usuario o contraseña incorrecto" });
+        }
+        if (!user.confirmed) { (nodemailer)
+          return res
+            .status(401)
+            .send({ msg: "Confirma el usuario a través del correo" });
+        }
 
       const isMatch = await bcrypt.compare(req.body.password, user.password);
       if (!isMatch) {
