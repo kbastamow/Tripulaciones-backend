@@ -51,6 +51,7 @@ const EventController = {
       const { page = 1, limit = 10 } = req.query;
 
       const events = await Event.find()
+      .populate({path:"categoryIds", select: "name"})
         // .limit(limit)
         // .skip((page - 1) * limit);
        res.status(201).send(events);

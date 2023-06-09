@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { getAll } = require("./ProgramController");
+const Program = require("../models/Program");
 // const transporter = require("../middlewares/nodemailer") //Nodemailer
 require("dotenv").config();
 
@@ -105,6 +106,7 @@ const UserController = {
       } else {
         delete data.image;
       }
+
       const user = await User.findByIdAndUpdate(req.user._id, data, {
         new: true,
       });
