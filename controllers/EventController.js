@@ -1,6 +1,7 @@
 const Event = require("../models/Event");
 const Category = require("../models/Category");
 const { findById } = require("../models/User");
+const User = require("../models/User");
 
 const EventController = {
   async createEvent(req, res) {
@@ -78,7 +79,24 @@ const EventController = {
       
     }
 
+  },
+
+  async joinEvent(req,res) {
+    try {
+    const event = await Event.findByIdAndUpdate(req.params._id,
+    { $push: { userIds: req.user._id } },
+    {new: true}
+    )
+    const user = await User.findByIdAndUpdate(req.user._id,
+    {$push: {eventIds: req.params._id}},
+    {new: true}
+    )
+    res.send({msg: "Te has apuntado al evento", event})
+  } catch (error) {
+    console.error(error)
+    res.send("Error en apuntar al evento") 
   }
+  } 
 
 };
 
