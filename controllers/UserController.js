@@ -166,7 +166,7 @@ const UserController = {
         })
         .populate({
           path: "eventIds",
-          select: "title _id",
+          select: "title _id date",
         });
       res.send(user);
     } catch (error) {
