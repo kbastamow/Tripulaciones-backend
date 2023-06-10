@@ -141,7 +141,13 @@ const UserController = {
 
   async getAll(req, res) {
     try {
-      const users = await User.find()
+      const users = await User.find().populate({
+        path: "program",
+        select: "name translation",
+      }).populate({
+        path: "categoryIds",
+        select: "name",
+      })
       res.status(200).send(users)
     } catch (error) {
      console.log(error)
