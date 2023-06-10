@@ -66,7 +66,7 @@ const EventController = {
   
   async getById(req, res) {
     try {
-      const event = findById(req.params._id)
+      const event = await Event.findById(req.params._id)
       .populate("categoryIds")
       .populate("userIds")
       console.log(event)
