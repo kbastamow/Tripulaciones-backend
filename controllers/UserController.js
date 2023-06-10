@@ -6,14 +6,12 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { getAll } = require("./ProgramController");
 const Program = require("../models/Program");
-const transporter = require("../config/nodemailer") 
+const transporter = require("../config/nodemailer");
 require("dotenv").config();
-
 
 const UserController = {
   //Register
   async register(req, res, next) {
- 
     const password = req.body.password;
     let hashedPassword;
     if (password) {
@@ -29,17 +27,17 @@ const UserController = {
       const emailToken = jwt.sign(
         { email: req.body.email },
         process.env.JWT_SECRET,
-        { expiresIn: '48h' }
+        { expiresIn: "48h" }
       );
       const url = `http://localhost:${process.env.PORT}/users/confirm/${emailToken}`;
-      console.log(user)
-        await transporter.sendMail({ 
-          to: req.body.email,
-          subject: "Confirme su registro",
-          html: `<h3>Bienvenido, estás a un paso de registrarte </h3>
+      console.log(user);
+      await transporter.sendMail({
+        to: req.body.email,
+        subject: "Confirme su registro",
+        html: `<h3>Bienvenido, estás a un paso de registrarte </h3>
           <a href='${url}'> Click para confirmar tu registro</a>
           `,
-        });
+      });
 
       res.status(201).send({ message: "Usuario creado con éxito", user });
     } catch (error) {
@@ -54,14 +52,14 @@ const UserController = {
     console.log(req.body);
     try {
       const user = await User.findOne({ email: req.body.email });
-        if (!user) {
-          return res.status(401).send({ msg: "Usuario o contraseña incorrecto" });
-        }
-        if (!user.confirmed) { 
-          return res
-            .status(401)
-            .send({ msg: "Confirma el usuario a través del correo" });
-        }
+      if (!user) {
+        return res.status(401).send({ msg: "Usuario o contraseña incorrecto" });
+      }
+      if (!user.confirmed) {
+        return res
+          .status(401)
+          .send({ msg: "Confirma el usuario a través del correo" });
+      }
 
       const isMatch = await bcrypt.compare(req.body.password, user.password);
       if (!isMatch) {
@@ -141,22 +139,28 @@ const UserController = {
 
   async getAll(req, res) {
     try {
-      const users = await User.find().populate({
-        path: "program",
-        select: "name translation",
-      }).populate({
-        path: "categoryIds",
-        select: "name",
-      })
-      res.status(200).send(users)
+      const users = await User.find()
+        .populate({
+          path: "program",
+          select: "name translation",
+        })
+        .populate({
+          path: "categoryIds",
+          select: "name",
+        });
+      res.status(200).send(users);
     } catch (error) {
-     console.log(error)
+      console.log(error);
     }
-   },
+  },
 
   async getById(req, res) {
     try {
       const user = await User.findById(req.params._id)
+        .populate({
+          path: "program",
+          select: "name translation",
+        })
         .populate({
           path: "categoryIds",
           select: "name _id",
@@ -186,7 +190,7 @@ const UserController = {
     }
   },
 
-   //CAMBIAR EL URL CUANDO ESTÈ DESPLEGADO!!!!
+  //CAMBIAR EL URL CUANDO ESTÈ DESPLEGADO!!!!
   async recoverPassword(req, res) {
     try {
       const recoverToken = jwt.sign(
@@ -194,7 +198,7 @@ const UserController = {
         process.env.JWT_SECRET,
         { expiresIn: "12h" }
       );
-      const url = `http://localhost:${process.env.PORT}/users/resetPassword/${recoverToken}`; 
+      const url = `http://localhost:${process.env.PORT}/users/resetPassword/${recoverToken}`;
       await transporter.sendMail({
         to: req.params.email,
         subject: "Recupera tu contraseña",
@@ -202,13 +206,15 @@ const UserController = {
         <a href='${url}'>Sigue el enlace para resetear tu contraseña</a>
         <p>El enlace sigue válido durante 12 horas</p>`,
       });
-      res.send({ message: "Te hemos enviado un correo para recuperar la contraseña" });
+      res.send({
+        message: "Te hemos enviado un correo para recuperar la contraseña",
+      });
     } catch (error) {
       console.error(error);
       res.status(500).send(error);
     }
   },
-  
+
   async resetPassword(req, res) {
     try {
       const recoverToken = req.params.recoverToken;
