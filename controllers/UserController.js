@@ -89,7 +89,8 @@ const UserController = {
   async updateProfile(req, res) {
     try {
       let data = { ...req.body };
-      console.log(data);
+      console.log(req.user._id);
+      
       if (req.file) {
         data = { ...data, image: req.file.filename };
         if (req.user.image) {
@@ -105,6 +106,7 @@ const UserController = {
       } else {
         delete data.image;
       }
+      console.log(req.user._id)
       const user = await User.findByIdAndUpdate(req.user._id, data, {
         new: true,
       });

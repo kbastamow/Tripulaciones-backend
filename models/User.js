@@ -34,7 +34,6 @@ const UserSchema = new mongoose.Schema(
 
         gender: {
             type: String,
-            required: [true, "Por favor rellena el género"],
         },
 
         role: {
