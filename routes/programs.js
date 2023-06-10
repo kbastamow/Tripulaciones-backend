@@ -4,7 +4,7 @@ const {authentication, isAdmin} = require('../middlewares/authentication')
 const router = express.Router()
 
 router.post("/createProgram", authentication, isAdmin, ProgramController.createProgram)
-router.get("getAll", ProgramController.getAll)
+router.get("/getAll", ProgramController.getAll)
 
 
 module.exports = router;
