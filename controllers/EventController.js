@@ -38,25 +38,31 @@ const EventController = {
 
   async joinEvent(req,res) {
     try {
-     const event =await Event.findById(req.params._id) 
+     let event = await Event.findById(req.params._id)
+    
      if (event.userIds.includes(req.user._id)) {
-      console.log("Ya está apuntada")
-      res.status(400).send({msg:"Ya estás apuntada al evento"})
+      console.log("Ya está apuntada", event)
+      return res.status(400).send({msg:"Ya estás apuntada al evento", event})
      } else {
        event.userIds.push(req.user._id)
        await event.save()
        
        const user = await User.findByIdAndUpdate(req.user._id,
         {$push: {eventIds: req.params._id}},
-        {new: true}
         )
+//Must do again or I can't get joins from categories and users
+        event = await Event.findById(req.params._id)
+        .populate("categoryIds")
+        .populate("userIds");
+
         res.send({msg: "Te has apuntado al evento", event})
      }
   } catch (error) {
     console.error(error)
-    res.send("Error en apuntar al evento") 
+    res.send(error)
   }
   }, 
+
 
   async deleteEvent(req, res) {
     try {
