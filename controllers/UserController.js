@@ -98,13 +98,8 @@ const UserController = {
   async updateProfile(req, res) {
     try {
       let data = { ...req.body };
-<<<<<<< HEAD
-      console.log(req.user._id);
-      
-=======
      
       console.log(data);
->>>>>>> develop
       if (req.file) {
         data = { ...data, image: req.file.filename };
         if (req.user.image) {
