@@ -120,11 +120,6 @@ const UserController = {
       } else {
         delete data.image;
       }
-<<<<<<< HEAD
-      console.log(req.user._id)
-=======
-
->>>>>>> develop
       const user = await User.findByIdAndUpdate(req.user._id, data, {
         new: true,
       });
