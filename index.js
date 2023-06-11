@@ -27,11 +27,9 @@ io.on('connection', (socket) => {
     // Handle chat messages
     socket.on('message', (data) => {
         console.log('data:', data);
-      // Broadcast the message to all connected clients
       io.emit('message', data);
     });
   
-    // Handle disconnection
     socket.on('disconnect', () => {
       console.log('A user disconnected');
     });

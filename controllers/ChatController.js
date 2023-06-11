@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const Chat = require("../models/Chat");
+const { ObjectId } = require('bson');
 
 
 const ChatController = {
@@ -94,19 +95,21 @@ const ChatController = {
 
   async getChatId(req, res) {
     try {
-      // const { chatId } = req.params;
-     console.log(req.params)
+     console.log("getChatId, req.params", req.params._id)
       // Buscar el chat por su ID
-      
       const chat = await Chat.findById(req.params)
-      .populate({path: "users", select: "_id name"});
+      .populate({path: "userIds", select: "_id name"});
       // Validar si el chat existe
-      console.log(chat)
       if (!chat) {
-        console.log("chat not found")
-        return res.status(404).json({ error: "Chat no encontrado" });
+        console.log("error")
+        return res.status(404).send({ msg: "Chat no encontrado" });
       }
-      console.log("success")
+      //Check que el usuario es parte del chat
+      // if (!chat.usersIds.some(user => user._id.toString() === req.user._id.toString())) {
+      //   console.log("no es tu chat");
+      //   return res.status(401).send({ msg: "No estás en el chat" });
+      // }
+      
       res.send(chat)
     } catch (error) {
       console.error(error);
@@ -137,25 +140,25 @@ async findOrCreate(req, res) {
   try {
     const you = req.user._id
     const otherUser = req.body.otherId
-    console.log(you)
-    console.log(otherUser)
+    if (!you || !otherUser) {
+      return res.status(400).send({msg: "Datos de usuario undefined"})
+    }
+
     const chat = await Chat.findOne({ users: { $all: [you, otherUser] }})
     if (chat) {
       console.log("old chat", chat)
       res.send(chat)
     } else {
-    const users = [you, otherUser];
-    console.log("userIds", users)
+    const userIds = [you, otherUser];
+    const newChat = await Chat.create( {name: "Chat", userIds})
+    userIds.forEach(async(user) => {
+      await User.findByIdAndUpdate(user, { $push: { chatIds: newChat._id } });
+    })
+    
+    res.status(201).send({msg:"new chat msg", newChat})  
+  }
 
-    const newChat = await Chat.create({users})
-    // chat.userIds.push(you); // Add `you` to `userIds` array
-    // chat.userIds.push(otherId); 
-    // await chat.save();
-
-    console.log(newChat)
-    res.status(201).send({msg:"new chat", newChat})  
-    }
-  } catch (error) {
+} catch (error) {
     console.error(error)
     res.status(500).json({ error: "Error interno del servidor" });
   }
