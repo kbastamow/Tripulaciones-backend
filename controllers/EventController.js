@@ -41,8 +41,8 @@ const EventController = {
      let event = await Event.findById(req.params._id)
     
      if (event.userIds.includes(req.user._id)) {
-      console.log("Ya está apuntada", event)
-      return res.status(400).send({msg:"Ya estás apuntada al evento", event})
+      // console.log("Ya está apuntada", event)
+      res.status(400).send("Ya estás apuntada al evento")
      } else {
        event.userIds.push(req.user._id)
        await event.save()
@@ -58,7 +58,6 @@ const EventController = {
         res.send({msg: "Te has apuntado al evento", event})
      }
   } catch (error) {
-    console.error(error)
     res.send(error)
   }
   }, 
