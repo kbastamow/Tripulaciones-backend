@@ -73,7 +73,6 @@ const ChatController = {
     }
   },
   
-
   async deleteChat(req, res) {
     try {
       const { chatId } = req.params;
@@ -95,17 +94,20 @@ const ChatController = {
 
   async getChatId(req, res) {
     try {
-      const { chatId } = req.params;
-
+      // const { chatId } = req.params;
+     console.log(req.params)
       // Buscar el chat por su ID
-      const chat = await Chat.findById(chatId);
-
+      
+      const chat = await Chat.findById(req.params)
+      .populate({path: "users", select: "_id name"});
       // Validar si el chat existe
+      console.log(chat)
       if (!chat) {
+        console.log("chat not found")
         return res.status(404).json({ error: "Chat no encontrado" });
       }
-
-      res.json({ chat });
+      console.log("success")
+      res.send(chat)
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Error interno del servidor" });
@@ -130,6 +132,37 @@ const ChatController = {
       res.status(500).json({ error: "Error interno del servidor" });
     }
   },
+
+async findOrCreate(req, res) {
+  try {
+    const you = req.user._id
+    const otherUser = req.body.otherId
+    console.log(you)
+    console.log(otherUser)
+    const chat = await Chat.findOne({ users: { $all: [you, otherUser] }})
+    if (chat) {
+      console.log("old chat", chat)
+      res.send(chat)
+    } else {
+    const users = [you, otherUser];
+    console.log("userIds", users)
+
+    const newChat = await Chat.create({users})
+    // chat.userIds.push(you); // Add `you` to `userIds` array
+    // chat.userIds.push(otherId); 
+    // await chat.save();
+
+    console.log(newChat)
+    res.status(201).send({msg:"new chat", newChat})  
+    }
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+
+}
+
+
 };
 
 module.exports = ChatController;

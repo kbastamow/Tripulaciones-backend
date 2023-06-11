@@ -8,6 +8,47 @@ const { handleTypeError }= require('./middlewares/errors');
 const app = express();
 app.use(cors());
 
+//SOCKET
+const http = require('http');
+const socketIO = require("socket.io");
+const server = http.createServer(app);
+const io = socketIO(server, {
+  cors: {
+    origin: "*", // Replace with the appropriate frontend URL
+    methods: ["GET", "POST"],
+    // allowedHeaders: ["my-custom-header"],
+    // credentials: true
+  }
+});
+
+io.on('connection', (socket) => {
+    console.log('A user connected');
+  
+    // Handle chat messages
+    socket.on('message', (data) => {
+        console.log('data:', data);
+      // Broadcast the message to all connected clients
+      io.emit('message', data);
+    });
+  
+    // Handle disconnection
+    socket.on('disconnect', () => {
+      console.log('A user disconnected');
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 app.use(express.json());
@@ -25,6 +66,6 @@ app.use(handleTypeError)
 dbConnection();
 
 
-app.listen(PORT, () => 
+server.listen(PORT, () => 
 console.log(`Server started on port ${PORT}`)
 );
