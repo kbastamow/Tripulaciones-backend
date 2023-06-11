@@ -30,7 +30,6 @@ const UserController = {
         { expiresIn: "48h" }
       );
       const url = `http://localhost:${process.env.PORT}/users/confirm/${emailToken}`;
-      console.log(user);
       await transporter.sendMail({
         to: req.body.email,
         subject: "Confirme su registro",
