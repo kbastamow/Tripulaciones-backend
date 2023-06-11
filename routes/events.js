@@ -6,7 +6,10 @@ const { uploadEventImage } = require("../middlewares/upload")
 
 router.post('/createEvent',authentication, EventController.createEvent)
 router.put('/updateEvent/:_id', EventController.updateEvent)
+router.put('/joinEvent/:_id', authentication, EventController.joinEvent)
 router.delete('/deleteEvent/:_id', EventController.deleteEvent)
 router.get('/getAll',EventController.getAllEvents)
+router.get('/getById/:_id',EventController.getById)
+router.get('/getMyEvents', authentication, EventController.getMyEvents)
 
 module.exports = router;

@@ -1,5 +1,7 @@
 const Event = require("../models/Event");
 const Category = require("../models/Category");
+const { findById } = require("../models/User");
+const User = require("../models/User");
 
 const EventController = {
   async createEvent(req, res) {
@@ -34,6 +36,33 @@ const EventController = {
     }
   },
 
+  async joinEvent(req,res) {
+    try {
+     let event = await Event.findById(req.params._id)
+    
+     if (event.userIds.includes(req.user._id)) {
+      // console.log("Ya está apuntada", event)
+      res.status(400).send("Ya estás apuntada al evento")
+     } else {
+       event.userIds.push(req.user._id)
+       await event.save()
+       
+       const user = await User.findByIdAndUpdate(req.user._id,
+        {$push: {eventIds: req.params._id}},
+        )
+//Must do again or I can't get joins from categories and users
+        event = await Event.findById(req.params._id)
+        .populate("categoryIds")
+        .populate("userIds");
+
+        res.send({msg: "Te has apuntado al evento", event})
+     }
+  } catch (error) {
+    res.send(error)
+  }
+  }, 
+
+
   async deleteEvent(req, res) {
     try {
       const event = await Event.findByIdAndDelete(req.params._id);
@@ -62,6 +91,41 @@ const EventController = {
       });
     }
   },
+  
+  async getById(req, res) {
+    try {
+      const event = await Event.findById(req.params._id)
+      .populate("categoryIds")
+      .populate("userIds")
+      console.log(event)
+      res.status(200).send(event)
+      
+    } catch (error) {
+      console.error(error)
+      res.status(500).send({msg: "Error en mostrar el evento"})
+      
+    }
+
+  },
+
+  async getMyEvents(req, res){
+    try {
+      const currentDate = new Date();
+      const events = await Event.find(
+        {
+        userIds: { $in: [req.user._id] },  //event that user is attending
+        date: { $gt: currentDate }  //date in the future
+      })
+      .sort({ date: 1 });
+      console.log(events)
+      res.status(200).send(events)
+    } catch (error) {
+      console.error(error)
+      res.send({msg: "Error en mostrar tus eventos"})
+    }
+   
+  }
+
 
 
 };
