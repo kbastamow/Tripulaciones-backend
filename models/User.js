@@ -27,12 +27,14 @@ const UserSchema = new mongoose.Schema(
         },
 
         age: {
-            type: String,
+            type: Number,
+            default: 99
 
         },
 
         gender: {
             type: String,
+            default: "N/A"
 
         },
 
@@ -52,6 +54,7 @@ const UserSchema = new mongoose.Schema(
         },
         year: {   //BOOTCAMP & MASTER: "1"
             type: String,
+            default: "1"
         },
 
         image: {
