@@ -8,8 +8,8 @@ const chatSchema = new mongoose.Schema({
       sender: { type: ObjectId, ref: 'User' },
       content: String,
       timestamp: { type: Date, default: Date.now }
-    }]
-  });
+    }],
+  },{ timestamps: true });
   
 const Chat = mongoose.model('Chat', chatSchema);
 
