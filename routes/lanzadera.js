@@ -4,7 +4,7 @@ const {authentication} = require("../middlewares/authentication")
 const router = express.Router()
 
 router.get("/getAll", authentication, LanzaderaController.getAll)
-router.get("/getAndLimit", LanzaderaController.getAndLimit)
+router.get("/getAndLimit", authentication, LanzaderaController.getAndLimit)
 
 
 module.exports = router;
