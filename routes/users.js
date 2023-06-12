@@ -1,6 +1,6 @@
 const express = require("express");
 const UserController = require("../controllers/UserController");
-const {authentication, isAdmin} = require('../middlewares/authentication');
+const {authentication, isAdmin, dataAuthentication} = require('../middlewares/authentication');
 const router = express.Router();
 const { uploadUserImage } = require("../middlewares/upload")
 
@@ -19,7 +19,7 @@ router.delete('/logout',authentication, UserController.logout)
 
 
 //PARA DATA SCIENCE
-router.get('/dataGetAll', UserController.dataGetAll)
+router.get('/dataGetAll', dataAuthentication, UserController.dataGetAll)
 
 
 module.exports = router;

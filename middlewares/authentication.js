@@ -35,6 +35,12 @@ const isAdmin = async (req, res, next) => {
   next();
 };
 
+const dataAuthentication = async(req, res, next) => {
+  const pass = req.headers.authorization
+  if (pass !== process.env.DATA_PASS) {
+    return res.status(403).send({msg: "No estás autorizado"})
+  }
+  next();
+}
 
-
-module.exports = { authentication, isAdmin };
+module.exports = { authentication, isAdmin, dataAuthentication };
