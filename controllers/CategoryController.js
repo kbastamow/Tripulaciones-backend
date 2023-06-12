@@ -79,6 +79,19 @@ const CategoryController = {
         .send({ message: "there was a problem trying to remove the category" });
     }
   },
+
+  //PARA DATA - NO UTILIZAR EN FRONT
+
+  async dataGetAll(req, res) {
+    try {
+      const categories = await Category.find()
+      res.send(categories);
+    } catch (error) {
+      console.error(error);
+      res.send(error)
+    }
+  },
+
 };
 
 module.exports = CategoryController;

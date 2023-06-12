@@ -21,8 +21,18 @@ const ProgramController = {
         } catch(error){
             console.error(error)
         }
-      }
-      
+      },
+
+        //PARA DATA - NO UTILIZAR EN FRONT
+
+        async dataGetAll(req, res){
+          try {
+              const programs = await Program.find()
+              res.status(200).send(programs)
+          } catch(error){
+              console.error(error)
+          }
+        },
     
 
 
