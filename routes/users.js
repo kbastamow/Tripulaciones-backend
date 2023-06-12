@@ -12,7 +12,7 @@ router.get("/confirm/:email", UserController.confirm);
 router.get("/getAll", authentication, UserController.getAll)
 router.get("/getById/:_id",authentication, UserController.getById);
 router.get("/searchByName/:name", authentication, UserController.searchByName)
-// router.get('/recoverPassword/:email',UserController.recoverPassword)
+router.get('/recoverPassword/:email',UserController.recoverPassword)
 router.put("/resetPassword/:recoverToken", UserController.resetPassword)
 router.delete('/logout',authentication, UserController.logout)
 
