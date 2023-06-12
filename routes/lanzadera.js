@@ -3,7 +3,7 @@ const LanzaderaController = require("../controllers/LanzaderaController")
 const {authentication} = require("../middlewares/authentication")
 const router = express.Router()
 
-router.get("/getAll", LanzaderaController.getAll)
+router.get("/getAll", authentication, LanzaderaController.getAll)
 router.get("/getAndLimit", LanzaderaController.getAndLimit)
 
 

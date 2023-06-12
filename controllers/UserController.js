@@ -244,6 +244,21 @@ const UserController = {
       });
     }
   },
+
+  //PARA DATA - NO UTILIZAR EN FRONT
+  async dataGetAll(req, res) {
+    try {
+      const users = await User.find().
+      populate({path:"categoryIds", select: "name"})
+      res.status(200).send(users);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+
+
+
 };
 
 module.exports = UserController;
