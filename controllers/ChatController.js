@@ -118,17 +118,31 @@ const ChatController = {
 
   async getChatsByUserId(req, res) {
     try {
-      const { userId } = req.params;
+      // const { userId } = req.body._id;
 
       // Buscar el usuario por su ID
-      const user = await User.findById(userId).populate("chats");
+      console.log(req.user._id)
 
+
+      const myChats = await Chat.find({ _id: { $in: req.user.chatIds } })  
+      .select('name _id updatedAt userIds')
+      .populate({
+        path: "userIds", 
+        select: "name surname image",
+        match: { _id: { $ne: req.user._id} }, //Exclude user that is me ne = not equal
+        // populate: {path: "messages", select: "user"}
+        });
+      
+      console.log(myChats)
       // Validar si el usuario existe
-      if (!user) {
-        return res.status(404).json({ error: "Usuario no encontrado" });
-      }
+      // if (!user) {
+      //   return res.status(404).json({ error: "Usuario no encontrado" });
+      // }
 
-      res.json({ chats: user.chats });
+
+
+    
+      res.send(myChats);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Error interno del servidor" });
