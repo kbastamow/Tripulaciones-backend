@@ -4,7 +4,7 @@ const {authentication, isAdmin, dataAuthentication} = require('../middlewares/au
 const router = express.Router()
 
 router.post("/createProgram", authentication, isAdmin, ProgramController.createProgram)
-router.get("/getAll", ProgramController.getAll)
+router.get("/getAll", authentication, ProgramController.getAll)
 
 //PARA DATA SCIENCE
 router.get('/dataGetAll', dataAuthentication, ProgramController.dataGetAll)

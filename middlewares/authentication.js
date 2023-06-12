@@ -42,5 +42,5 @@ const dataAuthentication = async(req, res, next) => {
   }
   next();
 }
-
+ 
 module.exports = { authentication, isAdmin, dataAuthentication };
