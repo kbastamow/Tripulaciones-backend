@@ -6,7 +6,6 @@ const UserSchema = new mongoose.Schema(
         name: {
             type: String,
             required: true
-
         },
 
         surname: {
@@ -79,6 +78,11 @@ const UserSchema = new mongoose.Schema(
         confirmed: {
             type: Boolean
         },
+
+        chatIds: [{
+            type: ObjectId,
+            ref: "Chat"
+        }],
 
         tokens: []
 
