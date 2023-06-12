@@ -51,18 +51,6 @@ io.on('connection', (socket) => {
   });
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
 app.use(express.json());
 app.use(express.static("./public"));
 
@@ -76,7 +64,6 @@ app.use("/programs", require("./routes/programs"))
 app.use(handleTypeError)
 
 dbConnection();
-
 
 server.listen(PORT, () => 
 console.log(`Server started on port ${PORT}`)
