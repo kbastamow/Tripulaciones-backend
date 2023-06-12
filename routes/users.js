@@ -16,5 +16,11 @@ router.get("/searchByName/:name", UserController.searchByName)
 router.put("/resetPassword/:recoverToken", UserController.resetPassword)
 router.delete('/logout',authentication, UserController.logout)
 
+
+
+//PARA DATA SCIENCE
+router.get('/dataGetAll', UserController.dataGetAll)
+
+
 module.exports = router;
 

@@ -124,10 +124,22 @@ const EventController = {
       res.send({msg: "Error en mostrar tus eventos"})
     }
    
-  }
+  },
 
 
+//PARA DATA - NO UTILIZAR EN FRONT
+ async dataGetAll(req, res) {
+    try {
+      const events = await Event.find()
+      res.send(events);
+    } catch (error) {
+      console.error(error);
+      res.send(error);
+    }
+  },
 
 };
+
+
 
 module.exports = EventController;

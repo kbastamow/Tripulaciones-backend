@@ -12,4 +12,7 @@ router.get('/getAll',EventController.getAllEvents)
 router.get('/getById/:_id',EventController.getById)
 router.get('/getMyEvents', authentication, EventController.getMyEvents)
 
+//Para data science
+router.get('/dataGetAll', EventController.dataGetAll)
+
 module.exports = router;
