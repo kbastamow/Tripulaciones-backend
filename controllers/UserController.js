@@ -30,7 +30,6 @@ const UserController = {
         { expiresIn: "48h" }
       );
       const url = `http://localhost:${process.env.PORT}/users/confirm/${emailToken}`;
-      console.log(user);
       await transporter.sendMail({
         to: req.body.email,
         subject: "Confirme su registro",
@@ -113,7 +112,6 @@ const UserController = {
       } else {
         delete data.image;
       }
-
       const user = await User.findByIdAndUpdate(req.user._id, data, {
         new: true,
       });
@@ -167,7 +165,7 @@ const UserController = {
         })
         .populate({
           path: "eventIds",
-          select: "title _id",
+          select: "title _id date",
         });
       res.send(user);
     } catch (error) {
@@ -246,6 +244,21 @@ const UserController = {
       });
     }
   },
+
+  //PARA DATA - NO UTILIZAR EN FRONT
+  async dataGetAll(req, res) {
+    try {
+      const users = await User.find().
+      populate({path:"categoryIds", select: "name"})
+      res.status(200).send(users);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+
+
+
 };
 
 module.exports = UserController;
