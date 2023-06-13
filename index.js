@@ -35,6 +35,8 @@ io.on('connection', (socket) => {
         return;
       }
       chat.messages.push({sender: data.sender, content: data.content, timestamp: data.timestamp});
+      chat.lastMsg.sender = data.senderName;
+      chat.lastMsg.content = data.content;
       // Save the updated chat
       await chat.save();
       

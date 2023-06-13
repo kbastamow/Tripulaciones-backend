@@ -123,9 +123,8 @@ const ChatController = {
       // Buscar el usuario por su ID
       console.log(req.user._id)
 
-
       const myChats = await Chat.find({ _id: { $in: req.user.chatIds } })  
-      .select('name _id updatedAt userIds')
+      .select('name _id updatedAt userIds lastMsg')
       .populate({
         path: "userIds", 
         select: "name surname image",

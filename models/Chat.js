@@ -9,6 +9,10 @@ const chatSchema = new mongoose.Schema({
       content: String,
       timestamp: { type: Date, default: Date.now }
     }],
+    lastMsg: {
+      sender: String,
+      content: String,
+    }
   },{ timestamps: true });
   
 const Chat = mongoose.model('Chat', chatSchema);
