@@ -1,20 +1,19 @@
 const User = require('../models/User');
 const Chat = require("../models/Chat");
+const { ObjectId } = require('bson');
 
 
 const ChatController = {
   async create(req, res) {
     try {
       const chat = await Chat.create(req.body); // Crear el objeto chat antes del bucle
-
       req.body.users.forEach(async (userId) => {
         await User.findByIdAndUpdate(userId, { $push: { chat: chat._id } });
       });
-
-      res.status(201).json({ message: "Chat creado", chat });
+      res.status(201).send({ message: "Chat creado", chat });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Error interno del servidor" });
+      res.status(500).send({ error: "Error interno del servidor" });
     }
   },
 
@@ -73,7 +72,6 @@ const ChatController = {
     }
   },
   
-
   async deleteChat(req, res) {
     try {
       const { chatId } = req.params;
@@ -95,17 +93,23 @@ const ChatController = {
 
   async getChatId(req, res) {
     try {
-      const { chatId } = req.params;
-
+     console.log("getChatId, req.params", req.params._id)
       // Buscar el chat por su ID
-      const chat = await Chat.findById(chatId);
-
+      const chat = await Chat.findById(req.params)
+      .populate({path: "userIds", select: "_id name"})
+      .populate({path: "messages.sender", select: "_id name"});
       // Validar si el chat existe
       if (!chat) {
-        return res.status(404).json({ error: "Chat no encontrado" });
+        console.log("error")
+        return res.status(404).send({ msg: "Chat no encontrado" });
       }
-
-      res.json({ chat });
+      //Check que el usuario es parte del chat
+      // if (!chat.usersIds.some(user => user._id.toString() === req.user._id.toString())) {
+      //   console.log("no es tu chat");
+      //   return res.status(401).send({ msg: "No estás en el chat" });
+      // }
+      
+      res.send(chat)
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Error interno del servidor" });
@@ -114,22 +118,66 @@ const ChatController = {
 
   async getChatsByUserId(req, res) {
     try {
-      const { userId } = req.params;
+      // const { userId } = req.body._id;
 
       // Buscar el usuario por su ID
-      const user = await User.findById(userId).populate("chats");
+      console.log(req.user._id)
 
+      const myChats = await Chat.find({ _id: { $in: req.user.chatIds } })  
+      .select('name _id updatedAt userIds lastMsg')
+      .populate({
+        path: "userIds", 
+        select: "name surname image",
+        match: { _id: { $ne: req.user._id} }, //Exclude user that is me ne = not equal
+        // populate: {path: "messages", select: "user"}
+        });
+      
+      console.log(myChats)
       // Validar si el usuario existe
-      if (!user) {
-        return res.status(404).json({ error: "Usuario no encontrado" });
-      }
+      // if (!user) {
+      //   return res.status(404).json({ error: "Usuario no encontrado" });
+      // }
 
-      res.json({ chats: user.chats });
+
+
+    
+      res.send(myChats);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Error interno del servidor" });
     }
   },
+
+async findOrCreate(req, res) {
+  try {
+    const you = req.user._id
+    const otherUser = req.body.otherId
+    if (!you || !otherUser) {
+      return res.status(400).send({msg: "Datos de usuario undefined"})
+    }
+
+    const chat = await Chat.findOne({ userIds: { $all: [you, otherUser] }}).populate({path: "messages.sender", select: "_id name"})
+    if (chat) {
+      console.log("old chat", chat)
+      res.send(chat)
+    } else {
+    const userIds = [you, otherUser];
+    const newChat = await Chat.create( {name: "Chat", userIds})
+    userIds.forEach(async(user) => {
+      await User.findByIdAndUpdate(user, { $push: { chatIds: newChat._id } });
+    })
+    console.log("new chat", newChat)
+    res.status(201).send({msg:"new chat msg", newChat})  
+  }
+
+} catch (error) {
+    console.error(error)
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+
+}
+
+
 };
 
 module.exports = ChatController;
