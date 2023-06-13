@@ -62,6 +62,7 @@ app.use('/users',require('./routes/users'))
 app.use('/chats',require('./routes/chats'))
 app.use("/lanzadera", require("./routes/lanzadera"))
 app.use("/programs", require("./routes/programs"))
+app.use('/groups', require('./routes/groups'));
 
 app.use(handleTypeError)
 
