@@ -129,18 +129,9 @@ const ChatController = {
         path: "userIds", 
         select: "name surname image",
         match: { _id: { $ne: req.user._id} }, //Exclude user that is me ne = not equal
-        // populate: {path: "messages", select: "user"}
         });
       
-      console.log(myChats)
-      // Validar si el usuario existe
-      // if (!user) {
-      //   return res.status(404).json({ error: "Usuario no encontrado" });
-      // }
 
-
-
-    
       res.send(myChats);
     } catch (error) {
       console.error(error);
@@ -156,18 +147,19 @@ async findOrCreate(req, res) {
       return res.status(400).send({msg: "Datos de usuario undefined"})
     }
 
-    const chat = await Chat.findOne({ userIds: { $all: [you, otherUser] }}).populate({path: "messages.sender", select: "_id name"})
-    if (chat) {
+    const isFound = await Chat.findOne({ userIds: { $all: [you, otherUser] }}).populate({path: "messages.sender", select: "_id name"})
+    if (isFound) {
+      const chat = {...isFound}
       console.log("old chat", chat)
-      res.send(chat)
+      res.send({msg:"old chat", chat})
     } else {
     const userIds = [you, otherUser];
-    const newChat = await Chat.create( {name: "Chat", userIds})
+    const chat = await Chat.create( {name: "Chat", userIds})
     userIds.forEach(async(user) => {
-      await User.findByIdAndUpdate(user, { $push: { chatIds: newChat._id } });
+      await User.findByIdAndUpdate(user, { $push: { chatIds: chat._id } });
     })
-    console.log("new chat", newChat)
-    res.status(201).send({msg:"new chat msg", newChat})  
+    console.log("new chat", chat)
+    res.status(201).send({msg:"new chat", chat})  
   }
 
 } catch (error) {
