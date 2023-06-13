@@ -96,7 +96,7 @@ const ChatController = {
      console.log("getChatId, req.params", req.params._id)
       // Buscar el chat por su ID
       const chat = await Chat.findById(req.params)
-      .populate({path: "userIds", select: "_id name"})
+      .populate({path: "userIds", select: "_id name image"})
       .populate({path: "messages.sender", select: "_id name"});
       // Validar si el chat existe
       if (!chat) {
@@ -118,17 +118,21 @@ const ChatController = {
 
   async getChatsByUserId(req, res) {
     try {
-      const { userId } = req.params;
+      // const { userId } = req.body._id;
 
       // Buscar el usuario por su ID
-      const user = await User.findById(userId).populate("chats");
+      console.log(req.user._id)
 
-      // Validar si el usuario existe
-      if (!user) {
-        return res.status(404).json({ error: "Usuario no encontrado" });
-      }
+      const myChats = await Chat.find({ _id: { $in: req.user.chatIds } })  
+      .select('name _id updatedAt userIds lastMsg')
+      .populate({
+        path: "userIds", 
+        select: "name surname image",
+        match: { _id: { $ne: req.user._id} }, //Exclude user that is me ne = not equal
+        });
+      
 
-      res.json({ chats: user.chats });
+      res.send(myChats);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Error interno del servidor" });
@@ -143,18 +147,19 @@ async findOrCreate(req, res) {
       return res.status(400).send({msg: "Datos de usuario undefined"})
     }
 
-    const chat = await Chat.findOne({ userIds: { $all: [you, otherUser] }}).populate({path: "messages.sender", select: "_id name"})
-    if (chat) {
+    const isFound = await Chat.findOne({ userIds: { $all: [you, otherUser] }}).populate({path: "messages.sender", select: "_id name"})
+    if (isFound) {
+      const chat = {...isFound}
       console.log("old chat", chat)
-      res.send(chat)
+      res.send({msg:"old chat", chat})
     } else {
     const userIds = [you, otherUser];
-    const newChat = await Chat.create( {name: "Chat", userIds})
+    const chat = await Chat.create( {name: "Chat", userIds})
     userIds.forEach(async(user) => {
-      await User.findByIdAndUpdate(user, { $push: { chatIds: newChat._id } });
+      await User.findByIdAndUpdate(user, { $push: { chatIds: chat._id } });
     })
-    console.log("new chat", newChat)
-    res.status(201).send({msg:"new chat msg", newChat})  
+    console.log("new chat", chat)
+    res.status(201).send({msg:"new chat", chat})  
   }
 
 } catch (error) {

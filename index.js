@@ -35,6 +35,8 @@ io.on('connection', (socket) => {
         return;
       }
       chat.messages.push({sender: data.sender, content: data.content, timestamp: data.timestamp});
+      chat.lastMsg.sender = data.senderName;
+      chat.lastMsg.content = data.content;
       // Save the updated chat
       await chat.save();
       
@@ -60,6 +62,7 @@ app.use('/users',require('./routes/users'))
 app.use('/chats',require('./routes/chats'))
 app.use("/lanzadera", require("./routes/lanzadera"))
 app.use("/programs", require("./routes/programs"))
+app.use('/groups', require('./routes/groups'));
 
 app.use(handleTypeError)
 
