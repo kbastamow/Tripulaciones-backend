@@ -50,7 +50,28 @@ const UserController = {
   async login(req, res) {
     console.log(req.body);
     try {
-      const user = await User.findOne({ email: req.body.email });
+      const user = await User.findOne({ email: req.body.email })
+      .populate({
+        path: "program",
+        select: "name translation",
+      })
+      .populate({
+        path: "categoryIds",
+        select: "name _id",
+      })
+      .populate({
+        path: "eventIds",
+        select: "title _id date",
+      });
+      if (!user) {
+        return res.status(401).send({ msg: "Usuario o contraseña incorrecto" });
+      }
+      if (!user.confirmed) {
+        return res
+          .status(401)
+          .send({ msg: "Confirma el usuario a través del correo" });
+      }
+;
       if (!user) {
         return res.status(401).send({ msg: "Usuario o contraseña incorrecto" });
       }
