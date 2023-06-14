@@ -11,6 +11,7 @@ router.delete('/deleteEvent/:_id', EventController.deleteEvent)
 router.get('/getAll', authentication, EventController.getAllEvents)
 router.get('/getById/:_id', authentication, EventController.getById)
 router.get('/getMyEvents', authentication, EventController.getMyEvents)
+router.get('/getRecommendations', authentication, EventController.getRecommendations)
 
 //Para data science
 router.get('/dataGetAll', dataAuthentication, EventController.dataGetAll)

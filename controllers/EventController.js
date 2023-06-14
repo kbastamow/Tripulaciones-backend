@@ -2,6 +2,7 @@ const Event = require("../models/Event");
 const Category = require("../models/Category");
 const { findById } = require("../models/User");
 const User = require("../models/User");
+const axios = require("axios")
 
 const EventController = {
   async createEvent(req, res) {
@@ -77,9 +78,13 @@ const EventController = {
 
   async getAllEvents(req, res) {
     try {
+      const currentDate = new Date();
       const { page = 1, limit = 10 } = req.query;
 
-      const events = await Event.find()
+      const events = await Event.find( {
+        date: { $gt: currentDate }  //date in the future
+      })
+      .sort({ date: 1 })
       .populate({path:"categoryIds", select: "name"})
         // .limit(limit)
         // .skip((page - 1) * limit);
@@ -124,6 +129,31 @@ const EventController = {
       res.send({msg: "Error en mostrar tus eventos"})
     }
    
+  },
+
+  async getRecommendations(req,res) {
+    try {
+      console.log("recommendations")
+      const response = await axios.get("http://16.171.15.34/get_recommendation_events")
+      const recommendations = response.data;
+      console.log(recommendations)
+      res.send(recommendations)
+      // const myRecommendations = recommendations.filter((item => userId === req.user._id))
+      // console.log(myRecommendations)
+      // const matchingObject = recommendations.find(obj => obj.key === req.user._id);
+  // if (matchingObject) {
+  //   // The matching object was found
+  //   console.log(matchingObject);
+  // } else {
+  //   // No matching object found
+  //   console.log("No object found for the specified userId.");
+  // }
+
+    } catch (error) {
+      console.error(error)
+      res.send(error)
+      
+    }
   },
 
 
