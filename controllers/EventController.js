@@ -1,6 +1,5 @@
 const Event = require("../models/Event");
 const Category = require("../models/Category");
-const { findById } = require("../models/User");
 const User = require("../models/User");
 const axios = require("axios")
 
@@ -42,7 +41,6 @@ const EventController = {
      let event = await Event.findById(req.params._id)
     
      if (event.userIds.includes(req.user._id)) {
-      // console.log("Ya está apuntada", event)
       res.status(400).send("Ya estás apuntada al evento")
      } else {
        event.userIds.push(req.user._id)
@@ -51,7 +49,6 @@ const EventController = {
        const user = await User.findByIdAndUpdate(req.user._id,
         {$push: {eventIds: req.params._id}},
         )
-//Must do again or I can't get joins from categories and users
         event = await Event.findById(req.params._id)
         .populate("categoryIds")
         .populate("userIds");
@@ -102,7 +99,6 @@ const EventController = {
       const event = await Event.findById(req.params._id)
       .populate("categoryIds")
       .populate("userIds")
-      console.log(event)
       res.status(200).send(event)
       
     } catch (error) {
@@ -122,7 +118,6 @@ const EventController = {
         date: { $gt: currentDate }  //date in the future
       })
       .sort({ date: 1 });
-      console.log(events)
       res.status(200).send(events)
     } catch (error) {
       console.error(error)
@@ -133,26 +128,11 @@ const EventController = {
 
   async getRecommendations(req,res) {
     try {
-      console.log("recommendations")
-      const response = await axios.get("http://16.171.15.34/get_recommendation_events")
-      const recommendations = response.data;
-      console.log(recommendations)
-      res.send(recommendations)
-      // const myRecommendations = recommendations.filter((item => userId === req.user._id))
-      // console.log(myRecommendations)
-      // const matchingObject = recommendations.find(obj => obj.key === req.user._id);
-  // if (matchingObject) {
-  //   // The matching object was found
-  //   console.log(matchingObject);
-  // } else {
-  //   // No matching object found
-  //   console.log("No object found for the specified userId.");
-  // }
-
+      const response= await axios.get("http://13.50.242.255/get_recommendation_events?requested_student_id=" + req.user._id)
+      res.send(response.data)
     } catch (error) {
       console.error(error)
       res.send(error)
-      
     }
   },
 
