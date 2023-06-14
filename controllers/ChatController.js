@@ -100,15 +100,8 @@ const ChatController = {
       .populate({path: "messages.sender", select: "_id name"});
       // Validar si el chat existe
       if (!chat) {
-        console.log("error")
         return res.status(404).send({ msg: "Chat no encontrado" });
       }
-      //Check que el usuario es parte del chat
-      // if (!chat.usersIds.some(user => user._id.toString() === req.user._id.toString())) {
-      //   console.log("no es tu chat");
-      //   return res.status(401).send({ msg: "No estás en el chat" });
-      // }
-      
       res.send(chat)
     } catch (error) {
       console.error(error);
@@ -118,11 +111,6 @@ const ChatController = {
 
   async getChatsByUserId(req, res) {
     try {
-      // const { userId } = req.body._id;
-
-      // Buscar el usuario por su ID
-      console.log(req.user._id)
-
       const myChats = await Chat.find({ _id: { $in: req.user.chatIds } })  
       .select('name _id updatedAt userIds lastMsg')
       .populate({
@@ -149,7 +137,7 @@ async findOrCreate(req, res) {
 
     const isFound = await Chat.findOne({ userIds: { $all: [you, otherUser] }}).populate({path: "messages.sender", select: "_id name"})
     if (isFound) {
-      const chat = {...isFound}
+      const chat = isFound
       console.log("old chat", chat)
       res.send({msg:"old chat", chat})
     } else {

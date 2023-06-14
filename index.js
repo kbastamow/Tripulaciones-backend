@@ -20,28 +20,29 @@ const io = socketIO(server, {
 });
 
 io.on('connection', (socket) => {
-  console.log('A user connected');
+
+  socket.on('joinChat', (chatId) => {
+    console.log('A user connected to room', chatId);
+    socket.join(chatId); // Join the chat room based on the chatId
+  });
 
   // Handle chat messages
   socket.on('message', async (data) => {
-    console.log('data:', data);
-
+   
     // Save the message to the database using the Chat model
     try {
-      //Save to DB
+ 
       const chat = await Chat.findById(data._id); 
       if (!chat) {
-        console.log('Chat not found');
         return;
       }
       chat.messages.push({sender: data.sender, content: data.content, timestamp: data.timestamp});
       chat.lastMsg.sender = data.senderName;
       chat.lastMsg.content = data.content;
-      // Save the updated chat
       await chat.save();
       
-      // Broadcast the message to all connected clients
-      io.emit('message', data);
+//ONLY TO PRIVATE:
+      io.to(data._id).emit('message', data);
     } catch (error) {
       console.error('Error saving message:', error);
     }
@@ -52,10 +53,11 @@ io.on('connection', (socket) => {
   });
 });
 
+
+
 app.use(cors())
 app.use(express.json());
 app.use(express.static("./public"));
-
 app.use("/events", require("./routes/events"));
 app.use('/categories',require('./routes/categories'));
 app.use('/users',require('./routes/users'))
