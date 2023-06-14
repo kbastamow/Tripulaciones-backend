@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.post('/create',authentication, GroupController.create)
 router.put('/update/:_id', authentication, GroupController.update)
-router.get('/getAll',authentication, GroupController.getAll)
+router.get('/getAll',authentication, GroupController.getAllGroups)
 router.get('/getById/:_id',authentication, GroupController.getById)
 router.delete('/delete/:_id',authentication, GroupController.delete)
 

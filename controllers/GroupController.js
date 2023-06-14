@@ -43,7 +43,7 @@ const GroupController = {
     }
   },
 
-  async getAll(req, res){
+  async getAllGroups(req, res){
     try {
         const groups = await Group.find()
         res.status(200).send(groups)
