@@ -32,6 +32,20 @@ const LanzaderaController = {
         }
     },
 
+    async getById(req, res) {
+        try {
+          const startups = await Lanzadera.findById(req.params._id)
+          console.log(startups)
+          res.status(200).send(startups)
+          
+        } catch (error) {
+          console.error(error)
+          res.status(500).send({msg: "Error en mostrar el evento"})
+          
+        }
+    
+      },
+
 
 }
 
