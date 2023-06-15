@@ -93,7 +93,6 @@ const ChatController = {
 
   async getChatId(req, res) {
     try {
-     console.log("getChatId, req.params", req.params._id)
       // Buscar el chat por su ID
       const chat = await Chat.findById(req.params)
       .populate({path: "userIds", select: "_id name image"})
@@ -138,7 +137,6 @@ async findOrCreate(req, res) {
     const isFound = await Chat.findOne({ userIds: { $all: [you, otherUser] }}).populate({path: "messages.sender", select: "_id name"})
     if (isFound) {
       const chat = isFound
-      console.log("old chat", chat)
       res.send({msg:"old chat", chat})
     } else {
     const userIds = [you, otherUser];
@@ -146,7 +144,6 @@ async findOrCreate(req, res) {
     userIds.forEach(async(user) => {
       await User.findByIdAndUpdate(user, { $push: { chatIds: chat._id } });
     })
-    console.log("new chat", chat)
     res.status(201).send({msg:"new chat", chat})  
   }
 

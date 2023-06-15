@@ -7,6 +7,7 @@ const User = require("../models/User");
 const { getAll } = require("./ProgramController");
 const Program = require("../models/Program");
 const transporter = require("../config/nodemailer");
+const axios = require("axios")
 require("dotenv").config();
 
 const UserController = {
@@ -48,7 +49,6 @@ const UserController = {
   //Confirm
 
   async login(req, res) {
-    console.log(req.body);
     try {
       const user = await User.findOne({ email: req.body.email })
       .populate({
@@ -115,25 +115,10 @@ const UserController = {
   //Aquí sin intereses (categorías), hay otro endpoint para ello
   async updateProfile(req, res) {
     try {
-      let data = { ...req.body };
-     
-      console.log(data);
-      if (req.file) {
-        data = { ...data, image: req.file.filename };
-        if (req.user.image) {
-          const imagePath = path.join(
-            __dirname,
-            "../public/images/user/",
-            req.user.image
-          );
-          if (fs.existsSync(imagePath)) {
-            fs.unlinkSync(imagePath); //Node.js method that deletes the corresponding file
-          }
-        }
-      } else {
-        delete data.image;
-      }
-      const user = await User.findByIdAndUpdate(req.user._id, data, {
+      let dataResponse = await axios.get("http://13.50.242.255/get_bad_language_filter?text=" + req.body.bio)
+      let filteredBio = dataResponse.data      
+      let data = { ...req.body, bio: filteredBio };
+        const user = await User.findByIdAndUpdate(req.user._id, data, {
         new: true,
       });
       res.status(200).send({ msg: "Perfil actualizado", user });
@@ -169,7 +154,7 @@ const UserController = {
         });
       res.status(200).send(users);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   },
 
@@ -273,7 +258,7 @@ const UserController = {
       populate({path:"categoryIds", select: "name"})
       res.status(200).send(users);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   },
 

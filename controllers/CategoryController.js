@@ -64,7 +64,7 @@ const CategoryController = {
 
       res.send(category);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   },
 

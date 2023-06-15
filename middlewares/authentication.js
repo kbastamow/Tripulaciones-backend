@@ -16,7 +16,7 @@ const authentication = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res
       .status(500)
       .send("Ha habido un problema con el token");
