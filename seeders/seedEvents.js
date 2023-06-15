@@ -149,13 +149,11 @@ const eventData =
 
   const connectToDatabase = async() => {
     if (isConnected) {
-      console.log('Already connected to MongoDB');
       return;
     }
     try {
       dbConnection()
       isConnected = true;
-      console.log('seedLanzadera Connected to MongoDB');
     } catch (error) {
       console.error('Error connecting to MongoDB:', error);
     }
@@ -163,7 +161,6 @@ const eventData =
 
   const seedEvents = async() => {
     const events = await Event.insertMany(eventData)
-    console.log(events)
 }
 
 

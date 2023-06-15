@@ -7,7 +7,6 @@ const LanzaderaController = {
     async getAll(req, res) {
         try {
             const startups = await Lanzadera.find()
-            console.log(startups)
             res.status(200).send(startups)
         } catch (error) {
             console.error(error)
@@ -35,7 +34,6 @@ const LanzaderaController = {
     async getById(req, res) {
         try {
           const startups = await Lanzadera.findById(req.params._id)
-          console.log(startups)
           res.status(200).send(startups)
           
         } catch (error) {

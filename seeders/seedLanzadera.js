@@ -13,13 +13,11 @@ let isConnected = false;
 
 const connectToDatabase = async() => {
     if (isConnected) {
-      console.log('Already connected to MongoDB');
       return;
     }
     try {
       dbConnection()
       isConnected = true;
-      console.log('seedLanzadera Connected to MongoDB');
     } catch (error) {
       console.error('Error connecting to MongoDB:', error);
     }
@@ -29,7 +27,6 @@ const seedLanzadera = async() => {
  try {
    const res = await axios.get("http://13.48.25.210/get_scrap_startups")
    const startups = res.data
-   console.log("length:", res.data.name)
 
     const names = Object.values(startups.name);
     const phases = Object.values(startups.phase);
@@ -56,7 +53,6 @@ const seedLanzadera = async() => {
       logo: logo,
     });
 
-    console.log(newLanzadera)
   // Save the newLanzadera instance to the database
     await newLanzadera.save();
   }

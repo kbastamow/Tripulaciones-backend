@@ -11,13 +11,11 @@ let isConnected = false;
 
 const connectToDatabase = async() => {
     if (isConnected) {
-      console.log('Already connected to MongoDB');
       return;
     }
     try {
       dbConnection()
       isConnected = true;
-      console.log('seedLanzadera Connected to MongoDB');
     } catch (error) {
       console.error('Error connecting to MongoDB:', error);
     }

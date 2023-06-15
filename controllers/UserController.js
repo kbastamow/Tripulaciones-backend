@@ -49,7 +49,6 @@ const UserController = {
   //Confirm
 
   async login(req, res) {
-    console.log(req.body);
     try {
       const user = await User.findOne({ email: req.body.email })
       .populate({
@@ -155,7 +154,7 @@ const UserController = {
         });
       res.status(200).send(users);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   },
 
@@ -259,7 +258,7 @@ const UserController = {
       populate({path:"categoryIds", select: "name"})
       res.status(200).send(users);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   },
 
