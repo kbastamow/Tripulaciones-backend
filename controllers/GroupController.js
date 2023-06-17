@@ -1,14 +1,6 @@
-const fs = require("fs"); //manejar imagenes
-const path = require("path"); //manejar imagenes
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
-const { getAll } = require("./ProgramController");
-const Program = require("../models/Program");
-const transporter = require("../config/nodemailer");
+
 const Group = require("../models/Group");
-require("dotenv").config();
+
 
 const GroupController = {
   

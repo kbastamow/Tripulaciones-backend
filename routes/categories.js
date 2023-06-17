@@ -4,7 +4,6 @@ const {authentication, isAdmin, dataAuthentication} = require('../middlewares/au
 const CategoryController = require('../controllers/CategoryController');
 
 
-//isAdmin no está implementado para facilitar desarrollo
 router.post('/create',authentication,CategoryController.createCategory)
 router.get('/getAll', authentication, CategoryController.getAll)
 router.get('/name/:name', authentication, CategoryController.getCategoriesByName)

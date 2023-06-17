@@ -30,7 +30,7 @@ const UserController = {
         process.env.JWT_SECRET,
         { expiresIn: "48h" }
       );
-      const url = `http://localhost:${process.env.PORT}/users/confirm/${emailToken}`;
+      const url = `http://localhost:${process.env.PORT}/users/confirm/${emailToken}`; //CAMBIAR AL URL real
       await transporter.sendMail({
         to: req.body.email,
         subject: "Confirme su registro",
@@ -45,8 +45,6 @@ const UserController = {
       next(error);
     }
   },
-
-  //Confirm
 
   async login(req, res) {
     try {

@@ -93,11 +93,9 @@ const ChatController = {
 
   async getChatId(req, res) {
     try {
-      // Buscar el chat por su ID
       const chat = await Chat.findById(req.params)
       .populate({path: "userIds", select: "_id name image"})
       .populate({path: "messages.sender", select: "_id name"});
-      // Validar si el chat existe
       if (!chat) {
         return res.status(404).send({ msg: "Chat no encontrado" });
       }

@@ -79,12 +79,10 @@ const EventController = {
       const { page = 1, limit = 10 } = req.query;
 
       const events = await Event.find( {
-        date: { $gt: currentDate }  //date in the future
+        date: { $gt: currentDate }  
       })
       .sort({ date: 1 })
       .populate({path:"categoryIds", select: "name"})
-        // .limit(limit)
-        // .skip((page - 1) * limit);
        res.status(201).send(events);
     } catch (error) {
       console.error(error);
@@ -114,8 +112,8 @@ const EventController = {
       const currentDate = new Date();
       const events = await Event.find(
         {
-        userIds: { $in: [req.user._id] },  //event that user is attending
-        date: { $gt: currentDate }  //date in the future
+        userIds: { $in: [req.user._id] },  
+        date: { $gt: currentDate }  
       })
       .sort({ date: 1 });
       res.status(200).send(events)
