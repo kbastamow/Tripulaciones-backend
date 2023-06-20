@@ -7,7 +7,7 @@
 
 ### This reporitory contains the backend for the project. The frontend can be found at
 
-[Marina for Students frontend ](#)
+[Marina for Students frontend ](https://github.com/kbastamow/Tripulaciones-frontend)
 
 ![](./public/images/assets/screenshots-front.jpg)
 
@@ -38,7 +38,7 @@ Register has several validations and password is encrypted. User is sent a confi
 
 Login sessions are secured with tokens.
 
-The backend communicates on certain endpoints with an API of data science to filter out bad language posted and to filter events according to an algorithm that analyses the users interests.
+The backend communicates on certain endpoints with an API of data science to filter out bad language posted and to filter events according to an algorithm that analyses the user's interests.
 
 Some endpoints also serve data science's database for the analysis of data.
 
